@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QualiTex Detection App - Upload</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="../assets/aos/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="manifest" href="./manifest.json">
+
+    <style>
+        /* Updated Styles */
+        .upload-hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), url('../assets/images/hero-detect.png');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            padding: 5rem 0;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--teal-accent);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background-color: #e0f7fa;
+        }
+
+        .chooseFileButton {
+            background-color: var(--charcoal);
+            color: white;
+            border: 0;
+        }
+
+        .chooseFileButton:hover {
+            background-color: var(--teal-accent);
+        }
+
+        .large-icon {
+            font-size: 8rem;
+        }
+
+        .cta p {
+            font-size: 2rem;
+        }
+
+        .cta-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), url('../assets/images/cta.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            min-height: 30vh;
+            display: flex;
+            align-items: center;
+        }
+
+        #download-app-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px white solid;
+            border-radius: 0.5rem;
+            transition: 0.3s;
+        }
+
+        #download-app-btn:hover {
+            background-color: white;
+            color: var(--charcoal);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg py-4 py-lg-0 shadow">
+        <div class="container px-4">
+            <a href="../index.html"><img src="../assets/images/logo_name.png" alt="QualiTex Logo"></a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#top-navbar">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="offcanvas offcanvas-end" id="top-navbar">
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#top-navbar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <ul class="navbar-nav ms-lg-auto p-4 p-lg-0">
+                    <li class="nav-item px-3 px-lg-0 py-1 py-lg-4"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item px-3 px-lg-0 py-1 py-lg-4"><a class="nav-link" href="pages/upload.html">Analyze</a></li>
+                    <li class="nav-item px-3 px-lg-0 py-1 py-lg-4"><a class="nav-link" href="#">Dashboard</a></li>
+                    <li class="nav-item dropdown px-3 px-lg-0 py-1 py-lg-4">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Resources</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Defect Guide</a></li>
+                            <li><a class="dropdown-item" href="#">Quality Tips</a></li>
+                            <li><a class="dropdown-item" href="#">FAQ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item px-3 px-lg-0 py-1 py-lg-4"><a class="nav-link text-center" href="#" id="signin">Sign In</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="upload-hero py-5 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold">Upload Your Fabric Image</h1>
+                    <p class="lead mt-3">
+                        Choose the type of fabric analysis to perform, and upload a clear fabric image for an instant quality and defect assessment.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis Options and Upload Area -->
+    <section class="detection-options py-5">
+        <div class="container">
+            <!-- Selection Options -->
+            <div class="text-center mb-4">
+                <h3>Select Analysis Type</h3>
+                <div class="btn-group mt-3" role="group">
+                    <button class="btn btn-outline-primary" onclick="selectAnalysis('defect')">Defect Detection</button>
+                    <button class="btn btn-outline-success" onclick="selectAnalysis('texture')">Texture Analysis</button>
+                </div>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-area mt-5" id="upload-area">
+                <h4 id="upload-heading">Upload an Image</h4>
+                <p class="mb-3">Drag and drop an image here or click to upload.</p>
+                <input type="file" id="imageUpload" class="form-control" accept="image/*" style="display: none;" onchange="handleImage(this)">
+                <button class="btn btn-primary chooseFileButton" onclick="document.getElementById('imageUpload').click()">Choose File</button>
+                <div id="image-preview" class="mt-4"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis Info Section -->
+    <section class="analysis-info py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center mb-4">
+                    <i class="bi bi-bar-chart-line-fill text-success large-icon"></i>
+                </div>
+                <div class="col-md-6">
+                    <h3>Why Analyze Your Fabric?</h3>
+                    <p>Analyzing fabric quality and consistency is essential for maintaining production standards. Early detection of defects and texture inconsistencies ensures optimal quality control.</p>
+                    <p>Upload a clear fabric image, and QualiTex will provide an instant, detailed assessment.</p>
+                </div>
+            </div>
+
+            <!-- Additional Benefits with Icons -->
+            <div class="row text-center mt-5">
+                <div class="col-md-4">
+                    <i class="bi bi-shield-check display-4 text-primary"></i>
+                    <h5 class="mt-3">Defect Detection</h5>
+                    <p>Identify fabric defects such as holes and oil spots before they impact quality.</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-award-fill display-4 text-warning"></i>
+                    <h5 class="mt-3">Texture Consistency</h5>
+                    <p>Ensure uniform texture for higher quality in textile production.</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-clock-fill display-4 text-danger"></i>
+                    <h5 class="mt-3">Instant Results</h5>
+                    <p>Receive immediate insights to enhance decision-making in real time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+<section class="faq-section py-5">
+    <div class="container">
+        <h3>Frequently Asked Questions</h3>
+        <div class="accordion" id="faqAccordion">
+            <!-- FAQ 1 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="100">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        What type of images should I upload?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Upload high-quality images of your fabric under natural lighting. Avoid blurred or low-resolution images for the best assessment results.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ 2 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        How long does the analysis take?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        The analysis typically takes only a few seconds, depending on the file size and internet speed. You’ll receive instant results on fabric quality.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ 3 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="300">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Is my data secure?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, your data is secure. We implement top data security practices to ensure that all images and results remain private and accessible only to you.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ 4 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="400">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Can I analyze multiple types of defects at once?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, QualiTex can assess multiple defect types such as holes, oil spots, and thread inconsistencies simultaneously in a single image.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ 5 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="500">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        Can I use the app offline?
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Currently, the app requires an internet connection for image upload and analysis. Offline analysis may be available in future updates.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ 6 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="600">
+                <h2 class="accordion-header" id="headingSix">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                        How accurate is the defect detection?
+                    </button>
+                </h2>
+                <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Our AI model is trained on extensive fabric defect datasets, providing a high level of accuracy. However, we recommend consulting a specialist for critical decisions.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ 7 -->
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="700">
+                <h2 class="accordion-header" id="headingSeven">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                        Do I need to register to use the app?
+                    </button>
+                </h2>
+                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Basic features are accessible without registration. Registering enables saving analysis history, accessing premium features, and receiving personalized insights.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- CTA Section -->
+    <section class="cta d-flex justify-content-center align-items-center text-center cta-image" id="cta">
+        <div class="container">
+            <h3>Download the QualiTex App for On-the-Go Access</h3>
+            <p>Get quality assessments and insights directly on your mobile device. Available for iOS and Android.</p>
+            <a href="#" class="btn btn-primary btn-lg" id="download-app-btn">Download QualiTex</a>
+        </div>
+    </section>
+
+    <footer class="footer text-light py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2023 QualiTex. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/aos/aos.js"></script>
+    <script>
+        AOS.init();
+
+        // Function to handle analysis type selection
+        function selectAnalysis(type) {
+            const heading = document.getElementById("upload-heading");
+            heading.innerText = type === "defect" ? "Upload Image for Defect Detection" : "Upload Image for Texture Analysis";
+        }
+
+        // Function to preview image on upload
+        function handleImage(input) {
+            const file = input.files[0];
+            const previewContainer = document.getElementById("image-preview");
+            previewContainer.innerHTML = "";
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.alt = "Uploaded Fabric Image";
+                    img.style.maxWidth = "100%";
+                    img.style.borderRadius = "8px";
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>
